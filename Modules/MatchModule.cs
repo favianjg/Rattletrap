@@ -375,7 +375,7 @@ namespace Rattletrap.Modules
         return;
       }
 
-      await ReplyAsync("Rattletrap v0.4 prototype");
+      await ReplyAsync("Rattletrap v0.5 prototype");
     }
   }
 }
