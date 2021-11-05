@@ -107,6 +107,15 @@ namespace Rattletrap
       return UnqueueResult.Success;
     }
 
+    public override void Requeue(List<IGuildUser> InUsers)
+    {
+      // really should only be one, but we'll loop anyway
+      foreach(IGuildUser user in InUsers)
+      {
+        Queue(user, null, null);
+      }
+    }
+
     public override string GetMatchInfo()
     {
       if(QueuedUser == null)

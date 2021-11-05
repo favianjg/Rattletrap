@@ -224,13 +224,7 @@ namespace Rattletrap
     public override QueueResult Queue(IGuildUser InUser, IGuildUser InTriggeringUser, IMessage InTriggeringMessage)
     {
       QueuingUsers.Add(InUser);
-
-      if(QueuingUsers.Count >= PlayersToKickOff)
-      {
-        InhouseMatch match = new InhouseMatch(InUser.Guild, this, new List<IGuildUser>(QueuingUsers));
-        QueuingUsers.RemoveRange(0, PlayersToKickOff);
-        MatchService.RunMatch(match);
-      }
+      CheckForGame();
 
       return QueueResult.Success;
     }
@@ -243,6 +237,22 @@ namespace Rattletrap
       }
       QueuingUsers.Remove(InUser);
       return UnqueueResult.Success;
+    }
+
+    public override void Requeue(List<IGuildUser> InUsers)
+    {
+      QueuingUsers.InsertRange(0, InUsers);
+      CheckForGame();
+    }
+
+    private void CheckForGame()
+    {
+      if(QueuingUsers.Count >= PlayersToKickOff)
+      {
+        InhouseMatch match = new InhouseMatch(Guild, this, QueuingUsers.GetRange(0, PlayersToKickOff));
+        QueuingUsers.RemoveRange(0, PlayersToKickOff);
+        MatchService.RunMatch(match);
+      }
     }
 
     public override string GetMatchInfo()

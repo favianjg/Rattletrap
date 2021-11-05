@@ -158,7 +158,6 @@ namespace Rattletrap
       DiscordSocket = InDiscordSocket;
 
       DiscordSocket.GuildAvailable += OnGuildAvailable;
-      DiscordSocket.GuildUnavailable += OnGuildUnavailable;
 
       DiscordSocket.ReactionAdded += OnReactionAdded;
       DiscordSocket.ReactionRemoved += OnReactionRemoved;
@@ -202,10 +201,6 @@ namespace Rattletrap
           message += user.Mention + " ";
         }
         InMatch.SourceQueue.AnnouncementChannel.SendMessageAsync(message);
-        foreach(IGuildUser user in InMatch.ReadyPlayers)
-        {
-          QueueUser(user, InMatch.SourceQueue);
-        }
       }
     }
 
@@ -439,13 +434,10 @@ namespace Rattletrap
 
               await originChannel.SendMessageAsync(message);
 
-              foreach(IUser player in match.Players)
-              {
-                if(player.Id != reaction.User.Value.Id)
-                {
-                  QueueUser(player as IGuildUser, match.SourceQueue);
-                }
-              }
+              List<IGuildUser> playersToRequeue = match.Players;
+              playersToRequeue.Remove(reaction.User.Value as IGuildUser);
+
+              match.SourceQueue.Requeue(playersToRequeue);
             }
 
             break;
