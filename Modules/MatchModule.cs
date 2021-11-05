@@ -35,7 +35,9 @@ namespace Rattletrap.Modules
 
         foreach(KeyValuePair<string, IQueue> queue in guildInfo.Queues)
         {
-          queues += $"`{queue.Key}` ";
+          if (queue.Key != "requeue") {
+            queues += $"`{queue.Key}` ";
+          }
         }
 
         await ReplyAsync($"Could not queue {Context.User.Mention} in `{InQueue}`: queue does not exist. Available queues: " + queues);
@@ -345,7 +347,9 @@ namespace Rattletrap.Modules
 
       foreach(KeyValuePair<string, IQueue> queue in guildInfo.Queues)
       {
-        messageText += $"`{queue.Key}` ";
+        if (queue.Key != "requeue"){
+          messageText += $"`{queue.Key}` ";
+        }
       }
 
       messageText += "\n**;cancel** - Removes you from the matchmaking queue.\n"
@@ -375,7 +379,7 @@ namespace Rattletrap.Modules
         return;
       }
 
-      await ReplyAsync("Rattletrap v0.5 prototype");
+      await ReplyAsync("Rattletrap v0.4 prototype");
     }
   }
 }
