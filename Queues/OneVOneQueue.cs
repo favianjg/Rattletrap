@@ -14,6 +14,8 @@ namespace Rattletrap
 
     }
 
+    public List<IGuildUser> MatchedUsers = new List<IGuildUser>();
+
     public override async void Announce()
     {
       string messageText = $"**STAND AND DELIVER!** Found a 1v1 (id: {Id}) in queue `{SourceQueue.Name}`.\n"
@@ -44,6 +46,11 @@ namespace Rattletrap
       State = MatchState.Ready;
 
       await SourceQueue.AnnouncementChannel.SendMessageAsync(message);
+    }
+
+    public override bool IsUserInMatch(IGuildUser InUser)
+    {
+      return MatchedUsers.Contains(InUser);
     }
 
     public override void OnLobby(String InName, String InPassword)
@@ -80,6 +87,7 @@ namespace Rattletrap
 
     public override QueueResult Queue(IGuildUser InUser, IGuildUser InTriggeringUser, IMessage InTriggeringMessage)
     {
+      // Unsure how to add the QueueResult.AlreadyInMatch here not enough C# knowledge sadge
       if(QueuedUser == InUser)
       {
         return QueueResult.AlreadyQueuing;

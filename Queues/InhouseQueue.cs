@@ -103,12 +103,18 @@ namespace Rattletrap
 
   public class InhouseMatch : IMatch
   {
+
+    public List<IGuildUser> MatchedUsers = new List<IGuildUser>();
     public InhouseMatch(IGuild InGuild, IQueue InSourceQueue, List<IGuildUser> InPlayers)
       : base(InGuild, InSourceQueue, InPlayers)
     {
 
     }
 
+    public override bool IsUserInMatch(IGuildUser InUser)
+    {
+      return MatchedUsers.Contains(InUser);
+    }
     public override async void Announce()
     {
       string messageText = $"**RATTLE AND ROLL!** Found a match (id: {Id}) in queue `{SourceQueue.Name}`.\n"

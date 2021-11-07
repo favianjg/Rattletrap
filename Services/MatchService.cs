@@ -99,6 +99,8 @@ namespace Rattletrap
     // called when all players have readied up
     public abstract void OnReady();
 
+    // check if user is in a match
+    public abstract bool IsUserInMatch(IGuildUser InUser);
     // called when a lobby has been created for the match
     public abstract void OnLobby(String InName, String InPassword);
   }
@@ -316,6 +318,14 @@ namespace Rattletrap
         if(playerCheckQueue.Value.IsUserInQueue(InUser))
         {
           return QueueResult.AlreadyQueuing;
+        }
+      }
+
+      foreach(IMatch matchesRunning in guildInfo.Matches) 
+      {
+        if(matchesRunning.IsUserInMatch(InUser))
+        {
+          return QueueResult.AlreadyInMatch;
         }
       }
 
